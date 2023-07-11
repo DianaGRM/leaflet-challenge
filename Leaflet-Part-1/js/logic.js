@@ -18,18 +18,24 @@ function createMap(earthquakes) {
 
   //create markers
   function markerSize(population) {
-    return (population) * 10000;
+    return (population) * 20000;
   }
   function markerColor(color) {
-    let num = Math.ceil(color)
     
-    var b = num & 0xFF,
-        g = (num & 0xFF00) >>> 8,
-        r = (num & 0xFF0000) >>> 16,
-        a = ( (num & 0xFF000000) >>> 24 ) / 255 ;
-    return "rgb(" + [r, g, b].join(",") + ")";
+    if (color> -10 && color<= 10 ){
+      return("green");
+    } else if(color>10 && color<=30){
+      return("lime");
+    } else if(color>30 && color<=50){
+      return("yellow");
+    } else if(color>50 && color<=70){
+      return("orange");
+    }else if(color>70 && color<=90){
+      return("pink");
+    }else if(color>90){
+      return("red");
+    } 
     
-    //return (`#${num.toString(16).padStart(6,"0")}`);
   }
 
 d3.json(url).then(createMarkers);
@@ -43,12 +49,14 @@ function createMarkers(response){
         coord = [earthquake.geometry.coordinates[1],earthquake.geometry.coordinates[0]]
 
         let marker = L.circle(coord,{
-            color: "#000000",
-            fillcolor: markerColor(earthquake.geometry.coordinates[2]),
-            opacity: 1,
-            fillOpacity: 1,
+            color: "black",
+            fillColor: markerColor(earthquake.geometry.coordinates[2]),
+            opacity: .3,
+            fillOpacity: 1, 
             radius: markerSize(earthquake.properties.mag)
              });
+
+        marker.bindPopup(`<h2>Earthquake: ${earthquake.properties.title}</h2><hr><p>More details: ${earthquake.properties.detail}</p>`);     
 
         earthquakeMarkers.push(marker);
         
@@ -58,5 +66,26 @@ function createMarkers(response){
     createMap(earthquakes);
 
     console.log(markerColor(response.features[0].geometry.coordinates[2]))
+
+    // Create a legend control
+    let legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (myMap) {
+     let div = L.DomUtil.create("div","info legend");
+     let colors = ['green', 'lime', 'yellow','orange','pink','red'];
+     let labels = ['-10-10','10-30','30-50','50-70','70-90','90+'];
+
+     //add items 
+     for (var i = 0; i < colors.length; i++) {
+      div.innerHTML += '<li style=\"background-color:' + colors[i] + '"></i> ' + labels[i] + '<br>';
+      }
+  
+
+     return div;
+     };
+
+  legend.addTo(myMap);
+     
+    
 }
 
