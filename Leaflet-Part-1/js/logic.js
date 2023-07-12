@@ -56,7 +56,7 @@ function createMarkers(response){
             radius: markerSize(earthquake.properties.mag)
              });
 
-        marker.bindPopup(`<h2>Earthquake: ${earthquake.properties.title}</h2><hr><p>More details: ${earthquake.properties.detail}</p>`);     
+        marker.bindPopup(`<h2>Earthquake: ${earthquake.properties.title}<hr>Depth: ${earthquake.geometry.coordinates[2]} </h2><hr><p>More details: ${earthquake.properties.detail}</p>`);     
 
         earthquakeMarkers.push(marker);
         
@@ -77,7 +77,7 @@ function createMarkers(response){
 
      //add items 
      for (var i = 0; i < colors.length; i++) {
-      div.innerHTML += '<li style=\"background-color:' + colors[i] + '"></i> ' + labels[i] + '<br>';
+      div.innerHTML += '<i style=\"background-color:' + colors[i] + '"></i> ' + labels[i] + '<br>';
       }
   
 
